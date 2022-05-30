@@ -1,15 +1,15 @@
 // Make Scroll To Top Button
 
 let scrollToTop = document.querySelector(".scroll-to-top");
-let header = document.querySelector("header"); //?
+let header = document.querySelector("header");
 
-window.onscroll = function () {
+window.addEventListener("scroll", function () {
   if (window.scrollY >= 444) {
     scrollToTop.classList.add("active");
   } else {
     scrollToTop.classList.remove("active");
   }
-};
+});
 
 scrollToTop.addEventListener("click", function () {
   header.scrollIntoView(true);
@@ -42,29 +42,87 @@ function increamentRate(el, started) {
   }, 600 / parseInt(el.parentElement.dataset.rate));
 }
 
-let started;
-window.onscroll = function () {
+let rateStarted;
+window.addEventListener("scroll", function () {
   if (targetSection.getBoundingClientRect().top <= 0) {
     Array.from(fillEs).forEach((fill) => {
-      increamentWidth(fill, started);
+      increamentWidth(fill, rateStarted);
     });
     Array.from(rateEs).forEach((rate) => {
-      increamentRate(rate, started);
+      increamentRate(rate, rateStarted);
     });
-    started = true;
+    rateStarted = true;
   }
-};
+});
 
-// // Countdon Timer
+// Countdon Timer
 
-// let timer = document.querySelector(".events .timer");
-// let [timerDays, timerHours, timerMins, timerSecs] = timer.children;
+let timer = document.querySelector(".events .timer");
+let [timerDays, timerHours, timerMins, timerSecs] = timer.children;
 
-// let nowDay = Date.now();
+const targetDay = new Date("2022-07-18T00:00:00Z");
 
-// let targetDay = new Date("2023-05-27T23:50:00Z");
+countDownTimer(targetDay);
 
-// setInterval(() => {
-//   timerDays.firstChild.textContent = nowDay
-// } ,1000)
+let counter = setInterval(countDownTimer, 1000, targetDay);
 
+function countDownTimer(targetDay) {
+  let dateNow = new Date().getTime();
+
+  let timeRemained = targetDay - dateNow;
+
+  timerDays.firstElementChild.textContent = Math.floor(
+    timeRemained / (1000 * 60 * 60 * 24)
+  );
+
+  timerHours.firstElementChild.textContent = Math.floor(
+    getAfterPoint(timeRemained / (1000 * 60 * 60 * 24)) * 24
+  );
+
+  timerMins.firstElementChild.textContent = Math.floor(
+    getAfterPoint(getAfterPoint(timeRemained / (1000 * 60 * 60 * 24)) * 24) * 60
+  );
+  timerSecs.firstElementChild.textContent = Math.floor(
+    getAfterPoint(
+      getAfterPoint(getAfterPoint(timeRemained / (1000 * 60 * 60 * 24)) * 24) *
+        60
+    ) * 60
+  );
+}
+
+function getAfterPoint(num) {
+  let newNum = num.toString();
+  let decimal;
+  for (let i = 0; i < newNum.length; i++) {
+    if (newNum[i] === ".") {
+      decimal = true;
+    }
+    if (decimal) {
+      newNum = newNum.slice(i, newNum.length);
+      break;
+    }
+  }
+  return parseFloat(newNum);
+}
+
+// Increament Stats On Scroll
+
+let statsSection = document.querySelector(".stats");
+let statsNums = document.querySelectorAll(".number");
+
+let statsStarted = false;
+
+window.addEventListener("scroll", () => {
+  if (statsSection.getBoundingClientRect().top <= 0 && !statsStarted) {
+    Array.from(statsNums).forEach((Num) => {
+      let increament = setInterval(() => {
+        Num.textContent++;
+        if (Num.textContent == Num.dataset.tar) {
+          clearInterval(increament);
+        }
+        console.log(Num.dataset.tar);
+      }, 2000 / Num.dataset.tar);
+    });
+    statsStarted = true;
+  }
+});

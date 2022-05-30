@@ -130,15 +130,20 @@ a {
   align-items: center;
   cursor: pointer;
   z-index: 1000;
-  transition: opacity var(--main-transition) ,bottom var(--main-transition);
+  transition: opacity var(--main-transition) ,
+    bottom var(--main-transition),
+    background-color var(--main-transition);
 }
 .scroll-to-top.not-active {
-  bottom: -30px;
+  bottom: -60px;
   opacity: 0;
 }
 .scroll-to-top.active {
   bottom: 30px;
   opacity: 1.0;
+}
+.scroll-to-top.active:hover {
+  background-color: var(--main-color-alt);
 }
 .scroll-to-top i {
   color: white;
